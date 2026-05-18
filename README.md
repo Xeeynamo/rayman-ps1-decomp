@@ -21,7 +21,6 @@ Any help with these is greatly appreciated! Feel free to create a PR or open an 
 
 | File                        | Function                         | Address | Link                            | % matching |
 |-----------------------------|----------------------------------|-------------|---------------------------------|------------|
-| src/card.c                  | SaveGameOnCard                   | 8016AC64    | https://decomp.me/scratch/hG4wh | 99.29%     |
 | src/save.c                  | restoreGameState                 | 80163C84    | https://decomp.me/scratch/F5Ked | 98.86%     |
 | src/sound.c                 | PlaySnd                          | 80166E94    | https://decomp.me/scratch/KzhV8 | 97.51%     |
 | src/video.c                 | PS1_PlayVideoFile                | 80132A44    | https://decomp.me/scratch/CMLNM | 96.47%     |
@@ -29,7 +28,6 @@ Any help with these is greatly appreciated! Feel free to create a PR or open an 
 | src/draw/draw_14FF4.c       | DISPLAY_ALL_OBJECTS              | 8013C2BC    | https://decomp.me/scratch/0fY1o | 99.58%     |
 | src/draw/draw_548CC.c       | Luciolle                         | 80179218    | https://decomp.me/scratch/4ai6p | 94.73%     |
 | src/draw/fond_10B3C.c       | init_bgi                         | 801356E0    | https://decomp.me/scratch/Qh0Tt | 98.41%     |
-| src/draw/fond_10B3C.c       | InitBG                           | 80135930    | https://decomp.me/scratch/l547t | 97.14%     |
 | src/draw/fond_10B3C.c       | DrawBG_spr_h                     | 80135D5C    | https://decomp.me/scratch/gNtGz | 88.67%     |
 | src/draw/fond_10B3C.c       | DrawBG_bande_v                   | 80136340    | https://decomp.me/scratch/2zVov | 99.04%     |
 | src/draw/fond_10B3C.c       | DrawBG_new                       | 801366AC    | https://decomp.me/scratch/kHz3p | 97.66%     |
