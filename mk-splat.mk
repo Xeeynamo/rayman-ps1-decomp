@@ -68,7 +68,10 @@ O_SRC_O2          := $(foreach file,$(SRC_FILES_O2),$(BUILD_DIR)/$(file).o)
 O_SRC_O1          := $(foreach file,$(SRC_FILES_O1),$(BUILD_DIR)/$(file).o)
 O_SRC_SCRATCH     := $(foreach file,$(SRC_FILES_SCRATCH),$(BUILD_DIR)/$(file).o)
 
-default: $(BUILD_EXE) check
+default: check
+
+check: $(BUILD_EXE)
+	sha1sum --check $(EXE).sha1
 
 extract: splat dirs
 
@@ -100,9 +103,6 @@ $(O_SRC_O1) : $(BUILD_DIR)/%.o : %
 CC_SCR := $(TOOLS_DIR)/gcc-2.5.7/cc1
 $(O_SRC_SCRATCH) : $(BUILD_DIR)/%.o : %
 	$(CPP) $(CPP_FLAGS) $< | $(CC_SCR) -quiet -mgas -msoft-float -G0 -O2 -fno-builtin -gcoff | $(MASPSX) $(MASPSX_FLAGS) | $(AS) $(AS_FLAGS) -o $@
-
-check:
-	sha1sum --check $(EXE).sha1
 
 clean:
 	rm -rf $(ASM_DIR) $(BUILD_DIR) $(EXE).ld undefined_funcs_auto.txt undefined_syms_auto.txt
