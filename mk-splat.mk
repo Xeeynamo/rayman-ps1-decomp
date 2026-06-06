@@ -107,8 +107,14 @@ $(O_SRC_SCRATCH) : $(BUILD_DIR)/%.o : %
 clean:
 	rm -rf $(ASM_DIR) $(BUILD_DIR) $(EXE).ld undefined_funcs_auto.txt undefined_syms_auto.txt
 
-us eu:
+us:
 	$(MAKE) -f mk-splat.mk VERSION=$@ clean
+	$(MAKE) -f mk-splat.mk VERSION=$@ extract
+	$(MAKE) -f mk-splat.mk VERSION=$@ -j
+
+eu:
+	$(MAKE) -f mk-splat.mk VERSION=$@ clean
+	$(MAKE) -f mk-splat.mk VERSION=us extract
 	$(MAKE) -f mk-splat.mk VERSION=$@ extract
 	$(MAKE) -f mk-splat.mk VERSION=$@ -j
 
