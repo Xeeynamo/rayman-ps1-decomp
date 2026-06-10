@@ -802,16 +802,16 @@ s32 TOUCHE(Input param_1)
     /*var_v0 = *(&jtbl_80127304 + (temp_a0 * 4));*/
     switch (param_1)
     {
-    case 0xFF:
+    case INPUT_READ:
         PS1_ButtonStates[1] = *PS1_ButtonStates;
         *PS1_ButtonStates = 0;
-        
+
         *PS1_ButtonStates = PS1_PadReceiveBuffer[3] + (PS1_PadReceiveBuffer[2] << 8);
         if (*PS1_ButtonStates != 0)
         {
             *PS1_ButtonStates ^= 0xFFFF;
         }
-        
+
         if (++D_801E4DF8 >= 5)
         {
             D_801E4DF8 = 0;

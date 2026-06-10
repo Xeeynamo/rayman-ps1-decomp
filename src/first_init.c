@@ -1,5 +1,9 @@
 #include "first_init.h"
 
+#ifdef PLATFORM_PSYZ
+#include <libapi.h>
+#endif
+
 const u8 s_loading_8012c368[] = "/loading.../";
 
 /* 7B048 8019F848 -O2 -msoft-float */
@@ -47,8 +51,11 @@ void loader(void)
     charge_vig_loader1();
     start_cd(0, 7);
     SetDispMask(1);
+#ifndef PLATFORM_PSYZ
     SYNCHRO_LOOP(prg_vig_loader1);
+    // This waits for the CDReady callback to be called
     while (track_is_finished() == false) {};
+#endif
     DO_FADE_OUT();
 }
 #endif
@@ -69,7 +76,7 @@ void curtainroll(u8 param_1)
     RECT fb_rect;
 
     __builtin_memcpy(&fb_rect, &D_801CF0E8, sizeof(D_801CF0E8));
-    StoreImage(&fb_rect, D_801C438C[num_world - 1]);
+    StoreImage(&fb_rect, (u_long*)FILE_HEAP(D_801C438C[num_world - 1]));
     MoveImage(&PS1_CurrentDisplay->field0_0x0.disp, fb_rect.x, fb_rect.y);
     DrawSync(0);
     if (param_1)
@@ -77,7 +84,7 @@ void curtainroll(u8 param_1)
         PS1_InitCurtainRoll(0);
         SYNCHRO_LOOP(PS1_DoCurtainRollRToL);
     }
-    LoadImage(&fb_rect, D_801C438C[num_world - 1]);
+    LoadImage(&fb_rect, (u_long*)FILE_HEAP(D_801C438C[num_world - 1]));
     DrawSync(0);
 }
 
@@ -90,9 +97,9 @@ void START_WORLD_VIGNET(void)
 
     unk_1 = D_801F4380;
     __builtin_memcpy(&fb_rect_1, &D_801CF0E8, sizeof(D_801CF0E8));
-    D_801F4380 = ((u8 *) D_801C438C[num_world - 1] + 0x45000);
+    D_801F4380 = ((u8 *) FILE_HEAP(D_801C438C[num_world - 1]) + 0x45000);
     charge_wld_vignette(num_world_choice);
-    StoreImage(&fb_rect_1, D_801C438C[num_world - 1]);
+    StoreImage(&fb_rect_1, (u_long*)FILE_HEAP((D_801C438C[num_world - 1])));
     MoveImage(&PS1_CurrentDisplay->field0_0x0.disp, fb_rect_1.x, fb_rect_1.y);
     DrawSync(0);
     PS1_InitCurtainRoll(0);
@@ -102,11 +109,11 @@ void START_WORLD_VIGNET(void)
     fb_rect_2.y = (SCREEN_HEIGHT - plan2_height) / 2;
     fb_rect_2.w = plan2_width;
     fb_rect_2.h = plan2_height;
-    LoadImage(&fb_rect_2, (u32 *) D_801F4380);
+    LoadImage(&fb_rect_2, (u_long*)D_801F4380);
     DrawSync(0);
     PS1_InitCurtainRoll(100);
     SYNCHRO_LOOP(PS1_DoCurtainRollLToR);
-    LoadImage(&fb_rect_1, D_801C438C[num_world - 1]);
+    LoadImage(&fb_rect_1, (u_long*)FILE_HEAP(D_801C438C[num_world - 1]));
     DrawSync(0);
     D_801F4380 = unk_1;
 }
@@ -178,7 +185,7 @@ void PS1_SetLevelTo_4_1(void)
 void FIRST_INIT(void)
 {
     PS1_InitSystem();
-    D_801F4380 = (void *) 0x8005866C;
+    D_801F4380 = (void *) FILE_HEAP(0x8005866C);
     PS1_Init_ImgLdrVdoTrk_Files();
     GAME_INIT2();
     loader();

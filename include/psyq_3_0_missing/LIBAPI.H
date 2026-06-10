@@ -1,6 +1,7 @@
 #ifndef _MISSING_LIBAPI_H_
 #define _MISSING_LIBAPI_H_
 
+#ifndef PLATFORM_PSYZ
 extern long OpenEvent(unsigned long,long,long,long (*func)());
 extern long TestEvent(long);
 extern long EnableEvent(long);
@@ -33,5 +34,8 @@ extern long _card_info(long chan);
 extern long _card_clear(long chan);
 extern long _card_load(long chan);
 extern long _card_auto(long val);
+#else
+#include <libapi.h>
+#endif
 
 #endif

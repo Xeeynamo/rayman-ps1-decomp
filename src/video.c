@@ -43,11 +43,11 @@ void PS1_PlayVideo(Video video)
 /* E180 80132980 -O2 -msoft-float */
 void videonext(void)
 {
-    LoadImage(&PS1_CurrentVideoState.frame_rect, (u32 *) PS1_CurrentVideoState.decoded_frame);
+    LoadImage(&PS1_CurrentVideoState.frame_rect, (u_long*)PS1_CurrentVideoState.decoded_frame);
     DrawSync(0);
     PS1_CurrentVideoState.frame_rect.x += 16;
     if (PS1_CurrentVideoState.frame_rect.x < SCREEN_WIDTH)
-        DecDCTout(PS1_CurrentVideoState.decoded_frame, 1664);
+        DecDCTout((u_long*)PS1_CurrentVideoState.decoded_frame, 1664);
     else
     {
         if (PS1_CurrentDisplay == &PS1_Displays[0])
@@ -74,6 +74,8 @@ INCLUDE_ASM("asm/nonmatchings/video", PS1_PlayVideoFile);
 /* score of ??? */
 void PS1_PlayVideoFile(s16 video)
 {
+// No video decoding on PsyZ, comment this out to prevent hangs
+#ifndef PLATFORM_PSYZ
     short sVar1;
     int iVar2;
     u32 *pbVar3;
@@ -103,8 +105,8 @@ void PS1_PlayVideoFile(s16 video)
         {
             readinput();
         }
-        DecDCTout((u32 *) PS1_CurrentVideoState.decoded_frame, 1664);
-        DecDCTin(PS1_CurrentVideoState.encoded_frame_buffers[PS1_CurrentVideoState.current_encode_buffer_index], 0);
+        DecDCTout((u_long*)PS1_CurrentVideoState.decoded_frame, 1664);
+        DecDCTin((u_long*)PS1_CurrentVideoState.encoded_frame_buffers[PS1_CurrentVideoState.current_encode_buffer_index], 0);
 
         if (PS1_CurrentVideoState.current_encode_buffer_index)
         {
@@ -128,8 +130,8 @@ void PS1_PlayVideoFile(s16 video)
     SsSetSerialVol('\0', 0, 0);
     CdControlB('\t', (u_char *) 0x0, (u_char *) 0x0);
     PS1_CurrentVideoState.has_swapped_display = 0;
-    DecDCTout((u32 *) PS1_CurrentVideoState.decoded_frame, 1664);
-    DecDCTin((u32 *) (&PS1_CurrentVideoState.encoded_frame_buffers[0])[PS1_CurrentVideoState.current_encode_buffer_index], 0);
+    DecDCTout((u_long*)PS1_CurrentVideoState.decoded_frame, 1664);
+    DecDCTin((u_long*)(&PS1_CurrentVideoState.encoded_frame_buffers[0])[PS1_CurrentVideoState.current_encode_buffer_index], 0);
     do
     {
     } while (PS1_CurrentVideoState.has_swapped_display == 0);
@@ -152,6 +154,7 @@ void PS1_PlayVideoFile(s16 video)
     {
         readinput();
     }
+#endif
     return;
 }
 #endif
@@ -181,7 +184,7 @@ void PS1_LoadVideoFile(CdlLOC *lba, u32 param_2)
     CdlLOC unk_1;
 
     CdIntToPos(CdPosToInt(lba) + (param_2 - 5) * 10, &unk_1);
-    StSetRing(D_801CEEE4, 32);
+    StSetRing((u_long*)D_801CEEE4, 32);
     StSetStream(0, param_2, 0x0FFFFFFF, null, null);
     while (!CdControl(CdlSeekL, &unk_1.minute, null)) {};
     CdSync(1, null);
@@ -195,7 +198,7 @@ void PS1_ReadVideoFile(u32 *param_1, Video video)
     StHEADER *header;
     u8 vol;
 
-    while (StGetNext(&user_data, (u32 **) &header)) {}
+    while (StGetNext((u_long **)&user_data, (u_long **) &header)) {}
     PS1_CurrentVideoState.frame_count = header->frameCount;
 
     if (video == VIDEO_PRES)
@@ -206,8 +209,8 @@ void PS1_ReadVideoFile(u32 *param_1, Video video)
         SsSetSerialVol(SS_SERIAL_A, vol, vol);
     }
 
-    DecDCTvlc(user_data, param_1);
-    StFreeRing(user_data);
+    DecDCTvlc((u_long*)user_data, (u_long*)param_1);
+    StFreeRing((u_long*)user_data);
 }
 
 /* E78C 80132F8C -O2 -msoft-float */

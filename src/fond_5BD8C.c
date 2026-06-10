@@ -21,7 +21,8 @@ void DISPLAY_ANYSIZE_PICTURE(u32 *image, s32 param_2, s32 param_3, s16 x, s16 y,
     sp10.y = y + PS1_CurrentDisplay->drawing_environment.clip.y;
     sp10.w = w;
     sp10.h = h;
-    LoadImage(&sp10,image);
+    LoadImage(&sp10, (u_long*)image);
+
 
     sp18.x = 0;
     sp18.y = PS1_CurrentDisplay->drawing_environment.clip.y;
@@ -87,7 +88,7 @@ void DISPLAY_ANYSIZE_PICTURE640(u32 *param_1, s32 param_2, s32 param_3, s16 x, s
     sp10.y = y + (PS1_CurrentDisplay->drawing_environment).clip.y;
     sp10.w = w;
     sp10.h = h;
-    LoadImage(&sp10,param_1);
+    LoadImage(&sp10, (u_long*)param_1);
     sp18.x = 0;
     sp18.y = (PS1_CurrentDisplay->drawing_environment).clip.y;
     sp18.w = 0x280;

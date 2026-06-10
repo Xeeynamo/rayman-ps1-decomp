@@ -715,7 +715,13 @@ u32 calc_btyp(Obj *obj)
     if (!(block_flags[obj->btypes[0]] >> BLOCK_SOLID & 1))
     {
         if (obj->type == TYPE_RAYMAN)
-            btyp = mp.map[ray.ray_dist] >> 10;
+        {
+#ifdef PLATFORM_PSYZ
+            // on PS1 this seems to point to NULL for a brief moment
+            if(mp.map != NULL)
+#endif
+                btyp = mp.map[ray.ray_dist] >> 10;
+        }
         else
             btyp = BTYP(obj->x_pos + obj->offset_bx, obj->y_pos + obj->offset_by);
 

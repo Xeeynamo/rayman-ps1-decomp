@@ -2,6 +2,9 @@
 #define OBJ_H
 
 #include "common.h"
+#ifdef PLATFORM_PSYZ
+#define printf(...)
+#endif
 
 typedef struct Sprite
 {
@@ -488,5 +491,48 @@ typedef struct Obj
     u8 timer;
     ObjFlags flags;
 } Obj;
+
+#ifdef USE_CUSTOM_FILE_HEAP
+static inline void REMAP_OBJ(Obj *obj)
+{
+    if (((uintptr_t) obj->sprites & 0xFF000000u) == 0x80000000u)
+        obj->sprites = (Sprite *) FILE_HEAP(obj->sprites);
+
+    if (((uintptr_t) obj->animations & 0xFF000000u) == 0x80000000u)
+    {
+        obj->animations = (Animation *) FILE_HEAP(obj->animations);
+        int num_anims = (obj->flags & FLG_OBJ_ANIM_COUNT_MASK);
+        for (int i = 0; i < num_anims; i++)
+        {
+            if (((uintptr_t) obj->animations[i].layers & 0xFF000000u) == 0x80000000u)
+                obj->animations[i].layers = (AnimationLayer *) FILE_HEAP((u32) obj->animations[i].layers);
+            if (((uintptr_t) obj->animations[i].frames & 0xFF000000u) == 0x80000000u)
+                obj->animations[i].frames = (AnimationFrame *) FILE_HEAP((u32) obj->animations[i].frames);
+        }
+    }
+
+    if (((uintptr_t) obj->img_buffer & 0xFF000000u) == 0x80000000u)
+        obj->img_buffer = FILE_HEAP((u32) obj->img_buffer);
+
+    if((uintptr_t)obj->eta != (uintptr_t)0x7fa4e9b0 && (((uintptr_t) obj->eta & 0xFF000000u) == 0x80000000u)) // there is one object in the game without an eta
+    {
+        obj->eta = (ObjState **) FILE_HEAP((u32) obj->eta);
+        if (((uintptr_t) obj->eta[0] & 0xFF000000u) == 0x80000000u)
+            obj->eta[0] = (ObjState *) FILE_HEAP((u32) obj->eta[0]);
+        int num_eta = (((u32) obj->eta[0]) - ((u32) obj->eta)) / 4;
+        printf("num_eta: %i\n", num_eta);
+        for (int i = 1; i < num_eta; i++)
+        {
+            if (obj->eta[i] && ((uintptr_t) obj->eta[i] & 0xFF000000u) == 0x80000000u)
+                obj->eta[i] = (ObjState *) FILE_HEAP((u32) obj->eta[i]);
+        }
+    }
+    if (obj->cmds != NULL && (((uintptr_t) obj->cmds & 0xFF000000u) == 0x80000000u))
+        obj->cmds = FILE_HEAP((u32) obj->cmds);
+
+    if (obj->cmd_labels != NULL && (((uintptr_t) obj->cmd_labels & 0xFF000000u) == 0x80000000u))
+        obj->cmd_labels = (s16 *) FILE_HEAP((u32) obj->cmd_labels);
+}
+#endif
 
 #endif

@@ -1,7 +1,15 @@
 #include "main.h"
 
+#ifdef PLATFORM_PSYZ
+#include <libapi.h>
+#endif
+
 #ifdef BSS_DEFS
 u8 fin_du_jeu;
+#endif
+
+#ifdef USE_CUSTOM_FILE_HEAP
+unsigned char file_heap[FILE_HEAP_SIZE];
 #endif
 
 /* B438 8012FC38 -O2 -msoft-float */
@@ -12,6 +20,10 @@ void main(void)
     Display *new_disp;
     RaymanEvents default_evts = PS1_DefaultRayEvts;
 
+#ifdef PLATFORM_PSYZ
+    Psyz_SetTitle("Rayman");
+    Psyz_SetDiskPath("rom.cue");
+#endif
     ResetCallback();
     _96_remove();
     D_801E4D48 = 0;
@@ -23,7 +35,7 @@ void main(void)
 
     StartPAD();
     ChangeClearPAD(0);
-    D_801F4380 = (u8 *) 0x8005866C;
+    D_801F4380 = (u8 *) FILE_HEAP(0x8005866C);
     while (true)
     {
         if (menuEtape != 4)

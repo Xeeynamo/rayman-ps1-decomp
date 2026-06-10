@@ -230,6 +230,7 @@ void PS1_DoCurtainRoll(s16 rollup_pos, s16 left_to_right)
     }
 }
 
+// PS1_RollUpTransition is broken on PsyZ right now
 /* 916C 8012D96C -O2 -msoft-float */
 s16 PS1_DoCurtainRollRToL(void)
 {

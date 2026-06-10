@@ -2,6 +2,7 @@
 
 #ifdef BSS_DEFS
 s16 eau_obj_id;
+u8 D_801F4EBA;
 #endif
 
 /* 4D908 80172108 -O2 -msoft-float */
@@ -61,12 +62,23 @@ void ACTIVE_L_EAU(Obj *eau_obj)
 /* 4DACC 801722CC -O2 -msoft-float */
 void DO_EAU_QUI_MONTE(Obj *obj)
 {
+#ifdef PLATFORM_PSYZ
+    /* These PS1 symbols alias fields of the global ray object. On PsyZ there is
+       no fixed-address overlay, so map them onto ray's fields directly. */
+#define ray_obj_flags ray.flags
+#define ray_obj_main_etat ray.main_etat
+#define ray_obj_sub_etat ray.sub_etat
+#define ray_obj_offset_by ray.offset_by
+#define ray_obj_y_pos ray.y_pos
+    extern u8 D_801F4EBA;
+#else
     extern u32 ray_obj_flags;
     extern u8 ray_obj_main_etat;
     extern u8 ray_obj_sub_etat;
     extern u8 ray_obj_offset_by;
     extern u16 ray_obj_y_pos;
     extern u8 D_801F4EBA;
+#endif
 
     if ((ray_obj_flags & 0x400) && ((ray_obj_main_etat != 3) || (ray_obj_sub_etat != 23)))
     {

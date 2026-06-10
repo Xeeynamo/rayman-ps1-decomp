@@ -37,7 +37,7 @@ void PS1_LoadTilePalettes(u32 *data, u8 height)
 
     rect.x = 768; rect.y = 504;
     rect.w = 256; rect.h = height;
-    LoadImage(&rect, data);
+    LoadImage(&rect, (u_long *) data);
 }
 
 /* DB4C 8013234C -O2 -msoft-float */
@@ -77,19 +77,40 @@ void InitFix(void)
     __builtin_memcpy(&div_obj, cur, sizeof(Obj));
     cur += sizeof(Obj);
     mapobj = (Obj *) cur;
+
+    #ifdef USE_CUSTOM_FILE_HEAP
+    alpha.sprites = (Sprite *)FILE_HEAP(alpha.sprites);
+    alpha.img_buffer = FILE_HEAP(alpha.img_buffer);
+    alpha2.sprites = (Sprite *)FILE_HEAP(alpha2.sprites);
+    alpha2.img_buffer = FILE_HEAP(alpha2.img_buffer);
+    REMAP_OBJ(&ray);
+    REMAP_OBJ(&raylittle);
+    REMAP_OBJ(&clock_obj);
+    REMAP_OBJ(&div_obj);
+    for(int i = 0; i < 25; i++)
+    {
+        REMAP_OBJ(&mapobj[i]);
+    }
+    #endif
 }
 
 /* DFEC 801327EC -O2 -msoft-float */
 void InitLevel(void)
 {
     __builtin_memcpy(&level, &PS1_LevelObjBlock[0], 8);
+#ifdef USE_CUSTOM_FILE_HEAP
+    level.objects = (Obj*)FILE_HEAP(level.objects);
+    for(int i = 0; i < level.nb_objects; i++)
+        REMAP_OBJ(&level.objects[i]);
+#endif
+
     __builtin_memcpy(D_801D7868, &PS1_LevelObjBlock[8], 8);
-    link_init = D_801D7868[0];
+    link_init = (u8*)FILE_HEAP((u8*)D_801D7868[0]);
 }
 
 /* E064 80132864 -O2 -msoft-float */
 void swap_level(s16 param_1)
 {
-    PS1_LevelMapBlock = (s16 *) 0x80780000;
-    D_801F59E0 = D_801C4374[param_1 - 1];
+    PS1_LevelMapBlock = (s16 *) (FILE_HEAP(0x80780000));
+    D_801F59E0 = (s32 *)FILE_HEAP(D_801C4374[param_1 - 1]);
 }

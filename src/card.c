@@ -1,5 +1,10 @@
 #include "card.h"
 
+#ifdef PLATFORM_PSYZ
+#include <libapi.h>
+#include <libetc.h>
+#endif
+
 #ifdef BSS_DEFS
 LoadInfo LoadInfoRay[3];
 u8 D_801F7F08[34];
@@ -218,8 +223,8 @@ s32 dir_file(u8 *name_start, struct DIRENTRY *in_files)
     s32 unk_1;
     s32 unk_2;
 
-    strcpy(filename, name_start);
-    strcat(filename, s__801cf02c);
+    strcpy((char *)filename, (const char *)name_start);
+    strcat((char *)filename, (const char *)s__801cf02c);
 
     switch (PS1_TestCard(0))
     {
@@ -288,8 +293,8 @@ s32 dir_file(u8 *name_start, struct DIRENTRY *in_files)
     struct DIRENTRY *var_s0;
     u16 test_1;
 
-    strcpy(sp10, name_start);
-    strcat(sp10, s__801cf02c);
+    strcpy((char *)sp10, (const char *)name_start);
+    strcat((char *)sp10, (const char *)s__801cf02c);
 
     switch (PS1_TestCard(0))
     {
@@ -608,10 +613,14 @@ s32 SaveGameOnDisk(u8 slot)
     if (res != 0)
     {
         PS1_CheckCardChanged();
-        strcpy(filename, PS1_SaveFilenames[slot - 1]);
+        strcpy((char *)filename, (const char *)PS1_SaveFilenames[slot - 1]);
         if (filename[0] != '\0')
+#ifdef PLATFORM_PSYZ
+            erase (filename);
+#else
             delete(filename);
-        strncpy(&PS1_SaveFilenames[slot - 1][17], save_ray[slot], 3);
+#endif
+        strncpy((char *)&PS1_SaveFilenames[slot - 1][17], (const char *)save_ray[slot], 3);
         res = (u8) SaveGameOnCard(0, slot);
     }
     return res;
@@ -755,7 +764,11 @@ void REMOVE_FICHIER(void)
         PS1_CheckCardChanged();
         filename = PS1_SaveFilenames[fichier_selectionne - 1];
         if (filename[0] != '\0')
+#ifdef PLATFORM_PSYZ
+            erase (filename);
+#else
             delete(filename);
+#endif
         PS1_Checksum = card_checksum(0);
         *save_ray[fichier_selectionne] = '\0';
         *PS1_SaveFilenames[fichier_selectionne - 1] = '\0';

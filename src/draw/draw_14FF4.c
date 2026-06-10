@@ -8,7 +8,7 @@ s16 PS1_PolygonIndexTable[200];
 s16 PS1_PolygonsCount;
 s16 D_801F4A28;
 u16 PS1_Disp_Cur_Tile1;
-void *PS1_PrevPrim;
+OT_TYPE *PS1_PrevPrim;
 u8 D_801E4C20;
 s16 D_801E4DF8;
 #endif
@@ -30,9 +30,9 @@ void draw_sprite_gen(Sprite *sprite, s16 in_x, s16 in_y, u8 disp_mode)
     {
         offs = PS1_PolygonsCount * sizeof(POLY_FT4);
         if (PS1_CurrentDisplay != PS1_Displays)
-            poly = (POLY_FT4 *) (0x800E3F2C + offs);
+            poly = (POLY_FT4 *) (FILE_HEAP(0x800E3F2C) + offs);
         else
-            poly = (POLY_FT4 *) (0x800D772C + offs);
+            poly = (POLY_FT4 *) (FILE_HEAP(0x800D772C) + offs);
         SetPolyFT4(poly);
         PS1_PolygonsCount++;
     }
@@ -221,7 +221,7 @@ void draw_sprite_gen(Sprite *sprite, s16 in_x, s16 in_y, u8 disp_mode)
         else
             SetSemiTrans(poly, false);
         AddPrim(PS1_PrevPrim, poly);
-        PS1_PrevPrim = poly;
+        PS1_PrevPrim = (OT_TYPE*)poly;
     }
 }
 
@@ -303,7 +303,7 @@ void draw_sprite_prof(Sprite *sprite, s16 x, s16 y, u8 is_flipped, s16 param_5)
         SetShadeTex(poly, true);
         SetSemiTrans(poly, false);
         AddPrim(PS1_PrevPrim, poly);
-        PS1_PrevPrim = poly;
+        PS1_PrevPrim = (OT_TYPE*)poly;
     }
 }
 
@@ -464,7 +464,7 @@ void draw_sprite_ray(Sprite *sprite, s16 x, s16 y, u8 is_flipped, s16 angle_ind)
         SetShadeTex(poly, true);
         SetSemiTrans(poly, false);
         AddPrim(PS1_PrevPrim, poly);
-        PS1_PrevPrim = poly;
+        PS1_PrevPrim = (OT_TYPE*)poly;
     }
 }
 
@@ -756,7 +756,7 @@ void draw_flocon1l(s16 x0, s16 y0)
     tile->r0 = 187; tile->g0 = 187; tile->b0 = 251;
     tile->x0 = x0; tile->y0 = y0;
     AddPrim(PS1_PrevPrim, tile);
-    PS1_PrevPrim = tile;
+    PS1_PrevPrim = (OT_TYPE*)tile;
 }
 
 /* 168C0 8013B0C0 -O2 -msoft-float */
@@ -767,7 +767,7 @@ void draw_flocon2l(s16 x0, s16 y0)
     tile->r0 = 199; tile->g0 = 223; tile->b0 = 247;
     tile->x0 = x0; tile->y0 = y0;
     AddPrim(PS1_PrevPrim, tile);
-    PS1_PrevPrim = tile;
+    PS1_PrevPrim = (OT_TYPE*)tile;
 }
 
 /* 16944 8013B144 -O2 -msoft-float */
@@ -778,7 +778,7 @@ void draw_flocon3l(s16 x0, s16 y0)
     sprt->u0 = 8; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 169B4 8013B1B4 -O2 -msoft-float */
@@ -789,7 +789,7 @@ void draw_flocon4l(s16 x0, s16 y0)
     sprt->u0 = 16; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16A24 8013B224 -O2 -msoft-float */
@@ -800,7 +800,7 @@ void draw_flocon5l(s16 x0, s16 y0)
     sprt->u0 = 40; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16A94 8013B294 -O2 -msoft-float */
@@ -811,7 +811,7 @@ void draw_flocon6(s16 x0, s16 y0)
     sprt->u0 = 48; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16B04 8013B304 -O2 -msoft-float */
@@ -822,7 +822,7 @@ void draw_flocon7(s16 x0, s16 y0)
     sprt->u0 = 56; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16B74 8013B374 -O2 -msoft-float */
@@ -833,7 +833,7 @@ void draw_pluie4(s16 x0, s16 y0)
     tile->r0 = 95; tile->g0 = 107; tile->b0 = 167;
     tile->x0 = x0; tile->y0 = y0;
     AddPrim(PS1_PrevPrim, tile);
-    PS1_PrevPrim = tile;
+    PS1_PrevPrim = (OT_TYPE*)tile;
 }
 
 /* 16BF8 8013B3F8 -O2 -msoft-float */
@@ -844,7 +844,7 @@ void draw_pluie5(s16 x0, s16 y0)
     sprt->u0 = 0; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16C64 8013B464 -O2 -msoft-float */
@@ -855,7 +855,7 @@ void draw_pluie6(s16 x0, s16 y0)
     sprt->u0 = 24; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16CD4 8013B4D4 -O2 -msoft-float */
@@ -866,13 +866,13 @@ void draw_pluie7(s16 x0, s16 y0)
     sprt->u0 = 32; sprt->v0 = 0;
     sprt->x0 = x0; sprt->y0 = y0;
     AddPrim(PS1_PrevPrim, sprt);
-    PS1_PrevPrim = sprt;
+    PS1_PrevPrim = (OT_TYPE*)sprt;
 }
 
 /* 16D44 8013B544 -O2 -msoft-float */
 void display_flocons_behind(void)
 {
-    u32 *ot_1;
+    OT_TYPE *ot_1;
     DR_ENV *dr_env;
     s16 prev_pcx; s16 prev_pcy;
     s16 cnt_1; s16 cnt_2; s16 cnt_3;
@@ -887,7 +887,7 @@ void display_flocons_behind(void)
     PS1_PrevPrim = ot_1;
     dr_env = &PS1_CurrentDisplay->map_drawing_environment_primitives[7];
     AddPrim(ot_1, dr_env);
-    PS1_PrevPrim = dr_env;
+    PS1_PrevPrim = (OT_TYPE*)dr_env;
 
     prev_pcx = PROJ_CENTER_X;
     prev_pcy = PROJ_CENTER_Y;
@@ -1012,7 +1012,7 @@ void display_flocons_behind(void)
 /* 173D0 8013BBD0 -O2 -msoft-float */
 void display_flocons_before(void)
 {
-    u32 *ot_7;
+    OT_TYPE *ot_7;
     DR_ENV *dr_env;
     s16 prev_pcx; s16 prev_pcy;
     s16 cnt_1; s16 cnt_2;
@@ -1027,7 +1027,7 @@ void display_flocons_before(void)
     PS1_PrevPrim = ot_7;
     dr_env = &PS1_CurrentDisplay->map_drawing_environment_primitives[6];
     AddPrim(ot_7, dr_env);
-    PS1_PrevPrim = dr_env;
+    PS1_PrevPrim = (OT_TYPE*)dr_env;
 
     prev_pcx = PROJ_CENTER_X;
     prev_pcy = PROJ_CENTER_Y;
@@ -1212,7 +1212,7 @@ void DISPLAY_ALL_OBJECTS(void)
     s16 iVar6;
     Obj *new_var4;
     ObjType obj_type;
-    uint uVar8;
+    u32 uVar8;
     short cnt_1;
     Obj *obj;
     s16 iVar10;
