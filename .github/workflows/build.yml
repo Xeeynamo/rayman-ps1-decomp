@@ -54,7 +54,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          SLES_000.49
+          SLES-000.49
           tools/gcc-2.5.7
         key: other-cache
     - if: steps.other-cache.outputs.cache-hit != 'true'
