@@ -58,7 +58,7 @@ jobs:
           tools/gcc-2.5.7
         key: other-cache
     - if: steps.other-cache.outputs.cache-hit != 'true'
-      run: cp /exe/SLES_000.49 SLES_000.49
+      run: cp /exe/SLES_000.49 SLES-000.49
     - if: steps.other-cache.outputs.cache-hit != 'true'
       name: Get gcc
       run:
